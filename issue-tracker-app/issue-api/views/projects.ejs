@@ -5,6 +5,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-route.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-resource.min.js"></script>
+    <!--funtionality script -->
+    <script src="/javascripts/issueApp.js"></script>
     <!-- styles -->
     <link rel="stylesheet" href="https://bootswatch.com/flatly/bootstrap.min.css" />
 
@@ -17,7 +19,7 @@
         <!-- styles -->
         <link rel="stylesheet" href="https://bootswatch.com/flatly/bootstrap.min.css" />
         <!-- {{ projects }} -->
-
+        <p class="navbar-right navbar-text"> Signed in as {{current_user}}</p>
         <div class="container">
         <h2>Projects</h2>
         <table class="table table-bordered table-hover ">
@@ -93,14 +95,14 @@
     <script>
         angular.module('app', ['ngRoute', 'ngResource'])
 
-        /* Services */
+        // Services
         .factory('Projects', ['$resource', ($resource) => {
             return $resource('/projects/projects.json/:id', null, {
                 'update': {method: 'PUT'}
             });
         }])
 
-        /* Controllers */
+        // Controllers
         .controller('ProjectController', ['$scope', 'Projects', ($scope, Projects) => {
             $scope.projects = Projects.query();
 
@@ -113,7 +115,7 @@
                 });
             };
 
-            /* delete a project */
+            // delete a project
             $scope.deleteProject = (project_id) => {
                 // get the project to delete
                 Projects.get({ where: { ProjectId: project_id} }, (project) => {
@@ -133,7 +135,7 @@
             };
         }])
 
-        /* routes */
+        // routes
         .config(['$routeProvider', ($routeProvider) => {
             $routeProvider
                 .when('/', {

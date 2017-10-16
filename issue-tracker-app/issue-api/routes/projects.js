@@ -1,7 +1,6 @@
 var express = require('express');
 var router = express.Router();
 var Sequelize = require ('sequelize');
-var bcrpyt = require ('bcryptjs');
 module.exports = router;
 
 /* establish a connection with the database */
@@ -20,7 +19,7 @@ const conn = new Sequelize('issueTrackerDB', 'ApolloAdmin', 'IssueTracker2017', 
     }
 });
 
-/* authenticate the connection */
+// authenticate the connection
 conn
     .authenticate()
     .then(() => {
