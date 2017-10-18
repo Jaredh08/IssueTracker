@@ -8,6 +8,7 @@ var passport = require('passport');
 var session = require('express-session');
 var LocalStrategy = require('passport-local');
 var bcyrpt = require('bcrypt');
+var config = require('./config/database');
 
 //import the routers
 var index = require('./routes/index');
@@ -26,8 +27,8 @@ app.set('view engine', 'ejs');
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(session({
-  secret: 'these issues need tracking'
-}));
+  secret: config.secret
+})); ///TODO move to environment variable
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -35,6 +36,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(__dirname + '/public'));
 app.use(passport.initialize());
 app.use(passport.session());
+
+//initialize passport
+
 
 //register routers
 app.use('/', login);
@@ -44,7 +48,7 @@ app.use('/login', login);
 app.use('/auth', authenticate)
 
 //initialize passport
-var initPassport = require('./passport-init');
+var initPassport = require('./config/passport');
 initPassport(passport);
 
 // catch 404 and forward to error handler

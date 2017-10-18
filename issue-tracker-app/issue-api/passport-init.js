@@ -1,25 +1,8 @@
 var LocalStrategy = require('passport-local').Strategy;
 var bcrypt = require('bcrypt');
 var Sequelize = require('sequelize')
-//var conn = require('./public/javascripts/conn')(dbConnect);
-
-/* establish a connection with the database */
-const conn = new Sequelize('issueTrackerDB', 'ApolloAdmin', 'IssueTracker2017', {
-    host: 'mtsu-4700-2017.database.windows.net',
-    dialect: 'mssql',
-    driver: 'tedious',
-    pool: {
-      max: 5,
-      min: 0,
-      idle: 10000
-    },
-    port: 1433,
-    dialectOptions: {
-      encrypt: true
-    }
-});
-
-const User = conn.import('./models/IssueTracker_Users.js');
+const config = require('./config/database');
+const User = config.connect.import('./models/IssueTracker_Users.js')
 
 module.exports = function(passport) {
 
@@ -42,7 +25,6 @@ module.exports = function(passport) {
     passReqToCallBack : true
     },
     function(username, password, done) {
-      console.log('username: '+ username, 'password: ' + password);
       //check database to see if a user with this username exists
       User.findOne({
         where: {
@@ -63,10 +45,8 @@ module.exports = function(passport) {
             console.log('Invalid Password');
             return done(null, false);
           }
-          //if the decision falls past all of the above gates, then the user has
-          //logged in successfully
           return done(null, user);
-          //// TODO add JWT functionality
+
       });
     }
   ));
