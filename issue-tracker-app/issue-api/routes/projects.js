@@ -1,39 +1,16 @@
-var express = require('express');
-var router = express.Router();
-var Sequelize = require ('sequelize');
+const express = require('express');
+const router = express.Router();
+const Sequelize = require ('sequelize');
+const passport = require('passport');
+const config = require('../config/database');
 module.exports = router;
 
-/* establish a connection with the database */
-const conn = new Sequelize('issueTrackerDB', 'ApolloAdmin', 'IssueTracker2017', {
-    host: 'mtsu-4700-2017.database.windows.net',
-    dialect: 'mssql',
-    driver: 'tedious',
-    pool: {
-      max: 5,
-      min: 0,
-      idle: 10000
-    },
-    port: 1433,
-    dialectOptions: {
-      encrypt: true
-    }
-});
-
-// authenticate the connection
-conn
-    .authenticate()
-    .then(() => {
-        console.log('Connection has been established successfully - projects.');
-    })
-    .catch(err => {
-        console.error('Unable to connect to the database:', err);
-});
-
 /* import database models */
-const Projects = conn.import('../models/IssueTracker_Projects.js')
-const Users = conn.import('../models/IssueTracker_Users.js')
+const Projects = config.connect.import('../models/IssueTracker_Projects.js')
+const Users = config.connect.import('../models/IssueTracker_Users.js')
 
-router.get('/', function(req, res, next) {
+router.get('/', passport.authenticate('jwt', {session:false}), (req, res, next) => {
+  console.log("here");
   res.render('projects', { title: 'Projects' });
 })
 
