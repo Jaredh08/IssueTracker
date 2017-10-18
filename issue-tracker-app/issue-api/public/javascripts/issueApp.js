@@ -28,9 +28,16 @@ app.controller('authController', function($scope, $http, $rootScope, $window){
 
   $scope.login = function() {
     $http.post('/auth/login', $scope.user).success(function(data){
-      if(data.state == 'success'){
+      if(data.success){
         $rootScope.authenticated = true;
         $rootScope.current_user = data.user.username;
+        $window.localStorage.currentUser = {
+          user: data.user.username,
+          token: data.token,
+          id:   data.user.id
+        };
+         $http.defaults.headers.common.Authorization = data.token;
+        //send successful logins to projects for now TODO (send to timelog)
         $window.location.href = 'projects';
       }
       else {
