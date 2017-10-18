@@ -1,80 +1,90 @@
-var express = require('express');
-var router = express.Router();
-var Sequelize = require('sequelize')
-//var conn = require('./public/javascripts/conn')(dbConnect);
-
-
+const express = require('express');
+const router = express.Router();
+const passport = require('passport');
+const jwt = require('jsonwebtoken');
+const config = require('../config/database');
+const User = config.connect.import('../models/IssueTracker_Users');
+const Users = require('../models/users');
+const UserRoles = require('../models/user-roles');
 
 module.exports = function(passport) {
-
-  /* establish a connection with the database */
-  const conn = new Sequelize('issueTrackerDB', 'ApolloAdmin', 'IssueTracker2017', {
-      host: 'mtsu-4700-2017.database.windows.net',
-      dialect: 'mssql',
-      driver: 'tedious',
-      pool: {
-        max: 5,
-        min: 0,
-        idle: 10000
-      },
-      port: 1433,
-      dialectOptions: {
-        encrypt: true
-      }
-  });
-  // authenticate the connection
-  conn
-      .authenticate()
-      .then(() => {
-          console.log('Connection has been established successfully - auth.');
-      })
-      .catch(err => {
-          console.error('Unable to connect to the database:', err);
-  });
-
-  const User = conn.import('../models/IssueTracker_Users.js');
-
-  //send a successful login state back to angular
-  router.get('/success', function(req, res) {
-    res.send({state: 'success', user: req.user ? req.user : null});
-  });
-
-  //sends failure login state back to angular
   router.get('/failure', function(req, res){
     res.send({state: 'failure', user: null, message: "Invaild username or password"});
   });
 
-  //log in
-  router.post('/login', passport.authenticate('login', {
-    successRedirect: '/auth/success',
-    failureRedicrect: '/auth/failure',
-    failureFlash: true
-  }))
+  // Authenticate
+  router.post('/login', (req, res, next) => {
+    //capture the username and password from the req
+    const username = req.body.username;
+    const password = req.body.password;
 
-  //create user
-  router.post('/createUser', passport.authenticate('local', {
-    successRedirect: '/auth/success',
-    failureRedicrect: '/auth/failure',
-    failureFlash: true
-  }));
+    //use the predefined db quesry (from ../models/users.js) to grab a user object
+    //and authenticate the user
+    Users.getUserByUsername(username, (err, user) => {
+      //if there is an error, throw it
+      if(err) throw err;
+      //if the user cannot be found, send a false to the authController
+      if(!user){
+        return res.status(401).json({success: false, msg: 'User not found'});
+      }
+      //if there is a user, compare the password hashes
+      Users.comparePassword(password, user.UserPassword, (err, isMatch) => {
+        if(err) throw err;
+        //if the passwords match, generate a token, and send it to the
+        //authcontroller with success
+        if(isMatch){
+          console.log('password matched');
+          const token = generateJWT(user);
 
-  //log out
-  router.get('/signout', function(req, res) {
-    req.logout();
-    req.redirect('/');
-  });
-
-  //delete entry by id (for getting rid of multiple entries)
-  router.delete('/drop/:id', (req, res, next) => {
-      console.log(req.params.id);
-      User.destroy({
-        where: {
-          UserId: req.params.id,
+          res.json({
+            success: true,
+            token: 'JWT '+token,
+            user: {
+              id: user.UserId,
+              displayname: user.DisplayName,
+              username: user.UserName,
+              email: user.Email
+            }
+          });
+        } else {
+          console.log('password does not match');
+          return res.json({success: false, message: 'Wrong password'});
         }
-      })
-      .then(result => {
-        console.log('Deleted user: $result.UserId - $result.UserName');
       });
+    });
   });
+
+  router.get('/projects', passport.authenticate('jwt', {
+    session: false, }), function(req, res) {
+    console.log("here");
+    res.send(req.user);
+    //res.render('projects', { title: 'Projects' });
+  });
+
+  //function which generates JWT
+  var generateJWT = function(user) {
+    var expiry = new Date();
+    expiry.setDate(expiry.getDate() + 7);
+    var uRoles = [1, 2, 3];
+    //the token needs to have the user's roles in it
+    uRoles = UserRoles.getRolesById(user.UserId, (err, roles) => {
+      if (err)
+        throw err;
+      if(!roles) {
+        return [];
+      }
+      else {
+        console.log(roles);
+        return roles;
+      }
+    });
+    console.log('roles: ', uRoles);
+    return jwt.sign({
+      id: user.UserId,
+      username: user.UserName,
+      roles: uRoles,
+      exp: parseInt(expiry.getTime() / 1000),
+    }, config.secret);
+  };
   return router;
 };

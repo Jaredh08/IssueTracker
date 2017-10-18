@@ -1,45 +1,19 @@
 var express = require('express');
 var router = express.Router();
 var Sequelize = require ('sequelize');
+const config = require('../config/database');
 module.exports = router;
 
-/* establish a connection with the database */
-const conn = new Sequelize('issueTrackerDB', 'ApolloAdmin', 'IssueTracker2017', {
-    host: 'mtsu-4700-2017.database.windows.net',
-    dialect: 'mssql',
-    driver: 'tedious',
-    pool: {
-        max: 5,
-        min: 0,
-        idle: 10000
-    },
-    port: 1433,
-    dialectOptions: {
-        encrypt: true
-    }
-});
-
-/** authenticate the connection */
-conn
-    .authenticate()
-    .then(() => {
-    console.log('Connection has been established successfully - issues.');
-})
-.catch(err => {
-    console.error('Unable to connect to the database:', err);
-});
-
-
 /** import all of the database models for issues */
-const Issues = conn.import('../models/IssueTracker_Issues.js');
-const IssueStatus = conn.import('../models/IssueTracker_IssueStatus.js');
-const IssueStatusType = conn.import('../models/IssueTracker_IssueStatusType.js');
-const IssueType = conn.import('../models/IssueTracker_IssueType.js');
-const IssueReminderReasons = conn.import('../models/IssueTracker_IssueReminderReasons.js');
-const IssuePriority = conn.import('../models/IssueTracker_IssuePriority.js');
-const IssueNotifications = conn.import('../models/IssueTracker_IssueNotifications.js');
-const IssueComments = conn.import('../models/IssueTracker_IssueComments.js');
-const IssueAttachments = conn.import('../models/IssueTracker_IssueAttachments.js');
+const Issues = config.connect.import('../models/IssueTracker_Issues.js');
+const IssueStatus = config.connect.import('../models/IssueTracker_IssueStatus.js');
+const IssueStatusType = config.connect.import('../models/IssueTracker_IssueStatusType.js');
+const IssueType = config.connect.import('../models/IssueTracker_IssueType.js');
+const IssueReminderReasons = config.connect.import('../models/IssueTracker_IssueReminderReasons.js');
+const IssuePriority = config.connect.import('../models/IssueTracker_IssuePriority.js');
+const IssueNotifications = config.connect.import('../models/IssueTracker_IssueNotifications.js');
+const IssueComments = config.connect.import('../models/IssueTracker_IssueComments.js');
+const IssueAttachments = config.connect.import('../models/IssueTracker_IssueAttachments.js');
 
 /**
  *  GET issue listing.
