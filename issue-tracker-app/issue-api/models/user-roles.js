@@ -1,11 +1,10 @@
 const config = require('../config/database');
 const UserRoles = config.connect.import('../models/IssueTracker_UserRoles');
+var roles;
 
 module.exports.getRolesById = function(id, callback) {
   UserRoles.findAll({
-    where: {
-      UserId: id
-    }
+    where: { UserId: id }
   })
   .then((roles, err) => {
     return callback(err, listify(roles));

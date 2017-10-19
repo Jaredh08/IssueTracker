@@ -36,9 +36,11 @@ app.controller('authController', function($scope, $http, $rootScope, $window){
           token: data.token,
           id:   data.user.id
         };
-         $http.defaults.headers.common.Authorization = data.token;
+        $http.get('auth/projects', {
+          headers: {'Authorization': data.token}
+        });
         //send successful logins to projects for now TODO (send to timelog)
-        $window.location.href = 'projects';
+        //$window.location.href = 'projects';
       }
       else {
         $scope.error_message = data.message;

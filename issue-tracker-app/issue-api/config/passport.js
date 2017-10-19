@@ -9,9 +9,9 @@ module.exports = function(passport){
   let opts = {};
   opts.jwtFromRequest = ExtractJwt.fromHeader("Authorization");
   opts.secretOrKey = config.secret;
-
+  console.log('initialize passport');
   //define the strategy
-  passport.use(new JwtStrategy(opts, (jwt_payload, done) => {
+  passport.use('local', new JwtStrategy(opts, (jwt_payload, done) => {
     console.log('inside the strategy: ', jwt_payload);
     User.getUserById(jwt_payload._doc._id, (err, user) => {
       if(err){

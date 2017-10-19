@@ -15,7 +15,7 @@ var index = require('./routes/index');
 var projects = require('./routes/projects');
 var issues = require('./routes/issues');
 var login = require('./routes/login');
-var authenticate = require('./routes/authenticate')(passport);
+var authenticate = require('./routes/authenticate');
 
 var app = express();
 
@@ -38,7 +38,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 //initialize passport
-
+require('./config/passport')(passport);
 
 //register routers
 app.use('/', login);
@@ -46,10 +46,6 @@ app.use('/projects', projects);
 app.use('/issues', issues);
 app.use('/login', login);
 app.use('/auth', authenticate)
-
-//initialize passport
-var initPassport = require('./config/passport');
-initPassport(passport);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

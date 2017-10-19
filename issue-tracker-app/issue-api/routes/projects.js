@@ -9,10 +9,10 @@ module.exports = router;
 const Projects = config.connect.import('../models/IssueTracker_Projects.js')
 const Users = config.connect.import('../models/IssueTracker_Users.js')
 
-router.get('/', passport.authenticate('jwt', {session:false}), (req, res, next) => {
-  console.log("here");
-  res.render('projects', { title: 'Projects' });
-})
+router.get('/', function(req, res, next) {
+    res.render('projects', { title: 'Login' });
+});
+
 
 /**
  *  GET project listing.
