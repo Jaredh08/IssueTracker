@@ -29,14 +29,18 @@
               <th>ProjectID</th>
               <th>Description</th>
               <th>Client</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
             <tr ng-repeat="project in projects">
-              <td> {{ project.ProjectName }} </td>
+              <td> <a ng-click="modifyProject(project)">{{ project.ProjectName }} </a></td>
               <td> {{ project.ProjectId }}</td>
               <td> {{ project.ProjectDescription }}</td>
               <td> {{ project.ProjectClient }}</td>
+              <td>
+                  <a ng-click="deleteProject(project.ProjectId)">Delete</a>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -103,27 +107,35 @@
         }])
 
         // Controllers
-        .controller('ProjectController', ['$scope', 'Projects', ($scope, Projects) => {
+        .controller('ProjectController', ['$scope', 'Projects', '$http', ($scope, Projects, $http) => {
             $scope.projects = Projects.query();
 
             // create a new project
             $scope.createProject =  () => {
-                var project = new Projects($scope.project);
-                project.$save(() => {
-                    // $scope.projects.push(project);
+                $http.post('/projects/', $scope.project)
+                .then(() => {
                     $scope.refresh();
                 });
+
             };
+
+            $scope.modifyProject = (project) => {
+                // load project to be modified
+                $scope.project = project;
+
+                // $http.put('/projects/' + project.ProjectId)
+                // .then(() => {
+                //     $scope.refresh();
+                // });
+            }
 
             // delete a project
             $scope.deleteProject = (project_id) => {
+                console.log("TEST ", project_id);
                 // get the project to delete
-                Projects.get({ where: { ProjectId: project_id} }, (project) => {
-                    // console.log(project);
-                    // // delete it and refresh the listing
-                    // project.$delete(() => {
-                    //     $scope.refresh();
-                    // });
+                $http.delete('/projects/' + project_id)
+                .then(() => {
+                    $scope.refresh();
                 });
             }
 
