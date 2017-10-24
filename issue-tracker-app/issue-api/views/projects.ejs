@@ -37,7 +37,7 @@
           </thead>
           <tbody>
             <tr ng-repeat="project in projects">
-              <td> <a ng-click="modifyProject(project)">{{ project.ProjectName }} </a></td>
+              <td> <a ng-click="changeView(project.ProjectId)">{{ project.ProjectName }} </a></td>
               <td> {{ project.ProjectId }}</td>
               <td> {{ project.ProjectDescription }}</td>
               <td> {{ project.ProjectClient }}</td>
@@ -98,11 +98,11 @@
     </script>
     <!-- End Project Listing Template -->
 
-    <!-- Individual Project Template -->
+    <!-- Edit Project Template -->
     <script type="text/ng-template" id="/project.html">
         <div class="container">
         <h2>Edit</h2>
-        <form class="form-vertical" role="form" ng-submit="createProject()">
+        <form class="form-vertical" role="form" ng-submit="updateProject()">
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
@@ -141,13 +141,13 @@
             <div class="row">
                 <div class="col-md-2">
                     <div class="form-group">
-                        <input type="submit" class="btn btn-danger" value="Create New" />
+                        <input type="submit" class="btn btn-danger" value="Update" />
                     </div>
                 </div>
             </div>
         </form>
         </div>
     </script>
-    <!-- End Individual Project Template -->
+    <!-- End Edit Project Template -->
   </body>
 </html>

@@ -8,7 +8,7 @@ app.factory('ProjectService', ['$resource', ($resource) => {
 }]);
 
 // Projects listing Controller
-app.controller('ProjectController', ['$scope', 'ProjectService', '$http', ($scope, ProjectService, $http) => {
+app.controller('ProjectController', ['$scope', 'ProjectService', '$http', '$location', ($scope, ProjectService, $http, $location) => {
     $scope.projects = ProjectService.query();
 
     // create a new project
@@ -44,11 +44,23 @@ app.controller('ProjectController', ['$scope', 'ProjectService', '$http', ($scop
         $scope.projects = ProjectService.query();
         $scope.project = "";
     };
+
+    $scope.changeView = function(view) {
+        $location.path(view);
+    }
 }]);
 
 
 app.controller('EditProject', function($scope, ProjectService, $http, $routeParams) {
-    $scope.project = ProjectService.query();
+    $scope.project = ProjectService.get({id: $routeParams.id});
+
+    $scope.updateProject = function() {
+        $http.put('/projects/projects.json/' + $routeParams.id, $scope.project)
+        .then(() => {
+            $scope.projects = ProjectService.query();
+        });
+    }
+
 });
 
 // routes
