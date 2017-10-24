@@ -31,7 +31,8 @@ app.controller('ProjectController', ['$scope', 'ProjectService', '$http', 'Helpe
     $scope.createProject =  () => {
         $http.post('/projects/', $scope.project)
         .then(() => {
-            $scope.refresh();
+            $scope.projects = ProjectService.query();
+            $scope.project = "";
         });
     };
 
@@ -40,7 +41,7 @@ app.controller('ProjectController', ['$scope', 'ProjectService', '$http', 'Helpe
         console.log("TEST ", project_id);
         $http.delete('/projects/projects.json/' + project_id)
         .then(() => {
-            $scope.helpers.refresh();
+            $scope.projects = ProjectService.query();
         });
     }
 }]);
