@@ -7,14 +7,17 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-resource.min.js"></script>
     <!--funtionality script -->
     <script src="/javascripts/issueApp.js"></script>
+    <script src="/javascripts/projectApp.js"></script>
     <!-- styles -->
     <link rel="stylesheet" href="https://bootswatch.com/flatly/bootstrap.min.css" />
+
 
   </head>
   <body>
 
     <ng-view></ng-view>
-    <!-- Templates  -->
+
+    <!-- Project Listing Template -->
     <script type="text/ng-template" id="/projects.html">
         <!-- styles -->
         <link rel="stylesheet" href="https://bootswatch.com/flatly/bootstrap.min.css" />
@@ -93,8 +96,9 @@
         </div>
         </div>
     </script>
+    <!-- End Project Listing Template -->
 
-    <!-- view individual project view -->
+    <!-- Individual Project Template -->
     <script type="text/ng-template" id="/project.html">
         <div class="container">
         <h2>Edit</h2>
@@ -144,69 +148,6 @@
         </form>
         </div>
     </script>
-
-    <script>
-        angular.module('app', ['ngRoute', 'ngResource'])
-
-        // Services
-        .factory('Projects', ['$resource', ($resource) => {
-            return $resource('/projects/projects.json/:id', null, {
-                'update': {method: 'PUT'}
-            });
-        }])
-
-        // Controllers
-        .controller('ProjectController', ['$scope', 'Projects', '$http', ($scope, Projects, $http) => {
-            $scope.projects = Projects.query();
-
-            // create a new project
-            $scope.createProject =  () => {
-                $http.post('/projects/', $scope.project)
-                .then(() => {
-                    $scope.refresh();
-                });
-
-            };
-
-            $scope.modifyProject = (project) => {
-                // load project to be modified
-                $scope.project = project;
-
-                // $http.put('/projects/' + project.ProjectId)
-                // .then(() => {
-                //     $scope.refresh();
-                // });
-            }
-
-            // delete a project
-            $scope.deleteProject = (project_id) => {
-                console.log("TEST ", project_id);
-                $http.delete('/projects/' + project_id)
-                .then(() => {
-                    $scope.refresh();
-                });
-            }
-
-            // refresh the scope to reflect database changes
-            // and reset fields
-            $scope.refresh = () => {
-                $scope.projects = Projects.query();
-                $scope.project = "";
-            };
-        }])
-
-        // routes
-        .config(['$routeProvider', ($routeProvider) => {
-            $routeProvider
-                .when('/', {
-                    templateUrl: '/projects.html',
-                    controller: 'ProjectController'
-                })
-                .when('/:id', {
-                    templateUrl: '/project.html',
-                    controller: 'ProjectController'
-                })
-        }])
-    </script>
+    <!-- End Individual Project Template -->
   </body>
 </html>
