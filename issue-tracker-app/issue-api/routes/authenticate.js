@@ -55,7 +55,7 @@ router.post('/login', (req, res, next) => {
   });
 });
 
-router.get('/projects', passport.authenticate('local', { session: false, }),
+router.get('/projects', passport.authenticate('jwt', { session: false, }),
   function(req, res) {
     res.render('projects', { title: 'Projects' });
   });
@@ -70,7 +70,7 @@ var generateJWT = function(user, roles) {
     username: user.UserName,
     roles: roles,
     exp: parseInt(expiry.getTime() / 1000),
-  }, config.secret);
-};
+  }, config.secret); //TODO when installing on server this should be an
+};                   //envorinment variable
 
 module.exports = router;
