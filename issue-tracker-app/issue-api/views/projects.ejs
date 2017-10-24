@@ -94,7 +94,56 @@
         </div>
     </script>
 
+    <!-- view individual project view -->
+    <script type="text/ng-template" id="/project.html">
+        <div class="container">
+        <h2>Edit</h2>
+        <form class="form-vertical" role="form" ng-submit="createProject()">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="project_name">Project Name</label>
+                        <input type="text" class="form-control" ng-model="project.ProjectName" />
+                    </div>
+                    <div class="form-group">
+                        <label>Project ID</label>
+                        <input type="number" class="form-control" ng-model="project.ProjectId" />
+                    </div>
+                    <div class="form-group">
+                        <label>Project Description</label>
+                        <input type="text" class="form-control" ng-model="project.ProjectDescription" />
+                    </div>
+                    <div class="form-group">
+                        <span>Project Disabled</span>
+                        <input type="checkbox" ng-model="project.ProjectDisabled" />
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Client</label>
+                        <input type="text" class="form-control" ng-model="project.ProjectClient" />
+                    </div>
+                    <div class="form-group">
+                        <label>Project Creator ID (enter 82)</label>
+                        <input type="number" class="form-control" ng-model="project.ProjectCreatorId" />
+                    </div>
+                    <div class="form-group">
+                        <label>Project Manager ID (enter 82)</label>
+                        <input type="number" class="form-control" ng-model="project.ProjectManagerId" />
+                    </div>
+                </div>
+            </div>
 
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-danger" value="Create New" />
+                    </div>
+                </div>
+            </div>
+        </form>
+        </div>
+    </script>
 
     <script>
         angular.module('app', ['ngRoute', 'ngResource'])
@@ -132,7 +181,6 @@
             // delete a project
             $scope.deleteProject = (project_id) => {
                 console.log("TEST ", project_id);
-                // get the project to delete
                 $http.delete('/projects/' + project_id)
                 .then(() => {
                     $scope.refresh();
@@ -152,6 +200,10 @@
             $routeProvider
                 .when('/', {
                     templateUrl: '/projects.html',
+                    controller: 'ProjectController'
+                })
+                .when('/:id', {
+                    templateUrl: '/project.html',
                     controller: 'ProjectController'
                 })
         }])

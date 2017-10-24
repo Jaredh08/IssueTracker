@@ -33,6 +33,7 @@ router.get('/projects.json', (req, res, next) => {
  *  curl -XPOST http://localhost:3000/projects -d 'ProjectId={SOME_UNIQUE_ID}&ProjectClient=Some%20Other%20Guy&ProjectName=REST%20api&ProjectDescription=another%20test&ProjectCreatorId=82&ProjectManagerId=82&ProjectDisabled=false'
 */
 router.post('/', (req, res, next) => {
+    // console.log(req.body);
     Projects.create(req.body)
     .then((err, newProj) => {
         if(err) {

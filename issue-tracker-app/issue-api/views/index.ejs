@@ -107,6 +107,7 @@
             // create a new project
             $scope.createProject =  () => {
                 var project = new Projects($scope.project);
+                // project.ProjectCreationDate = new DateTime();
                 project.$save(() => {
                     // $scope.projects.push(project);
                     $scope.refresh();
@@ -114,15 +115,9 @@
             };
 
             /* delete a project */
-            $scope.deleteProject = (project_id) => {
+            $scope.deleteProject = (project_id, $http) => {
                 // get the project to delete
-                Projects.get({ where: { ProjectId: project_id} }, (project) => {
-                    // console.log(project);
-                    // // delete it and refresh the listing
-                    // project.$delete(() => {
-                    //     $scope.refresh();
-                    // });
-                });
+                $http.delete(/projects.json/)
             }
 
             // refresh the scope to reflect database changes
