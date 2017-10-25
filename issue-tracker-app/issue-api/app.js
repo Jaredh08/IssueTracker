@@ -16,6 +16,7 @@ var projects = require('./routes/projects');
 var issues = require('./routes/issues');
 var login = require('./routes/login');
 var authenticate = require('./routes/authenticate');
+var users = require('./routes/users');
 
 var app = express();
 
@@ -46,6 +47,7 @@ app.use('/projects', projects);
 app.use('/issues', issues);
 app.use('/login', login);
 app.use('/auth', authenticate)
+app.use('/users', users);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
