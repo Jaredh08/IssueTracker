@@ -7,14 +7,17 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-resource.min.js"></script>
     <!--funtionality script -->
     <script src="/javascripts/issueApp.js"></script>
+    <script src="/javascripts/projectApp.js"></script>
     <!-- styles -->
     <link rel="stylesheet" href="https://bootswatch.com/flatly/bootstrap.min.css" />
+
 
   </head>
   <body>
 
     <ng-view></ng-view>
-    <!-- Templates  -->
+
+    <!-- Project Listing Template -->
     <script type="text/ng-template" id="/projects.html">
         <!-- styles -->
         <link rel="stylesheet" href="https://bootswatch.com/flatly/bootstrap.min.css" />
@@ -34,7 +37,7 @@
           </thead>
           <tbody>
             <tr ng-repeat="project in projects">
-              <td> <a ng-click="modifyProject(project)">{{ project.ProjectName }} </a></td>
+              <td> <a ng-click="helpers.changeView(project.ProjectId)">{{ project.ProjectName }} </a></td>
               <td> {{ project.ProjectId }}</td>
               <td> {{ project.ProjectDescription }}</td>
               <td> {{ project.ProjectClient }}</td>
@@ -93,68 +96,58 @@
         </div>
         </div>
     </script>
+    <!-- End Project Listing Template -->
 
+    <!-- Edit Project Template -->
+    <script type="text/ng-template" id="/updateProject.html">
+        <div class="container">
+        <h2>Edit Project</h2>
+        <form class="form-vertical" role="form" ng-submit="updateProject()">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="project_name">Project Name</label>
+                        <input type="text" class="form-control" ng-model="project.ProjectName" />
+                    </div>
+                    <div class="form-group">
+                        <label>Project ID</label>
+                        <input type="number" class="form-control" ng-model="project.ProjectId" />
+                    </div>
+                    <div class="form-group">
+                        <label>Project Description</label>
+                        <input type="text" class="form-control" ng-model="project.ProjectDescription" />
+                    </div>
+                    <div class="form-group">
+                        <span>Project Disabled</span>
+                        <input type="checkbox" ng-model="project.ProjectDisabled" />
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Client</label>
+                        <input type="text" class="form-control" ng-model="project.ProjectClient" />
+                    </div>
+                    <div class="form-group">
+                        <label>Project Creator ID (enter 82)</label>
+                        <input type="number" class="form-control" ng-model="project.ProjectCreatorId" />
+                    </div>
+                    <div class="form-group">
+                        <label>Project Manager ID (enter 82)</label>
+                        <input type="number" class="form-control" ng-model="project.ProjectManagerId" />
+                    </div>
+                </div>
+            </div>
 
-
-    <script>
-        angular.module('app', ['ngRoute', 'ngResource'])
-
-        // Services
-        .factory('Projects', ['$resource', ($resource) => {
-            return $resource('/projects/projects.json/:id', null, {
-                'update': {method: 'PUT'}
-            });
-        }])
-
-        // Controllers
-        .controller('ProjectController', ['$scope', 'Projects', '$http', ($scope, Projects, $http) => {
-            $scope.projects = Projects.query();
-
-            // create a new project
-            $scope.createProject =  () => {
-                $http.post('/projects/', $scope.project)
-                .then(() => {
-                    $scope.refresh();
-                });
-
-            };
-
-            $scope.modifyProject = (project) => {
-                // load project to be modified
-                $scope.project = project;
-
-                // $http.put('/projects/' + project.ProjectId)
-                // .then(() => {
-                //     $scope.refresh();
-                // });
-            }
-
-            // delete a project
-            $scope.deleteProject = (project_id) => {
-                console.log("TEST ", project_id);
-                // get the project to delete
-                $http.delete('/projects/' + project_id)
-                .then(() => {
-                    $scope.refresh();
-                });
-            }
-
-            // refresh the scope to reflect database changes
-            // and reset fields
-            $scope.refresh = () => {
-                $scope.projects = Projects.query();
-                $scope.project = "";
-            };
-        }])
-
-        // routes
-        .config(['$routeProvider', ($routeProvider) => {
-            $routeProvider
-                .when('/', {
-                    templateUrl: '/projects.html',
-                    controller: 'ProjectController'
-                })
-        }])
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-danger" value="Update" />
+                    </div>
+                </div>
+            </div>
+        </form>
+        </div>
     </script>
+    <!-- End Edit Project Template -->
   </body>
 </html>

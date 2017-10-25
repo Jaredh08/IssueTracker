@@ -33,6 +33,7 @@ router.get('/projects.json', (req, res, next) => {
  *  curl -XPOST http://localhost:3000/projects -d 'ProjectId={SOME_UNIQUE_ID}&ProjectClient=Some%20Other%20Guy&ProjectName=REST%20api&ProjectDescription=another%20test&ProjectCreatorId=82&ProjectManagerId=82&ProjectDisabled=false'
 */
 router.post('/', (req, res, next) => {
+    // console.log(req.body);
     Projects.create(req.body)
     .then((err, newProj) => {
         if(err) {
@@ -51,7 +52,7 @@ router.post('/', (req, res, next) => {
  *  test in bash with
  *  curl -XGET http://localhost:3000/projects/{SOME_UNIQUE_ID}
  */
-router.get('/:id', (req, res, next) => {
+router.get('/projects.json/:id', (req, res, next) => {
     Projects.findOne({
         where: {
             ProjectId: req.params.id,
@@ -74,7 +75,7 @@ router.get('/:id', (req, res, next) => {
  *  test in bash with
  *  curl -XPUT http://localhost:3000/projects/{SOME_UNIQUE_ID} -d 'ProjectId={SOME_UNIQUE_ID}&ProjectClient=Some%20Other%20Guy&ProjectName=REST%20api&ProjectDescription=another%20test&ProjectCreatorId=82&ProjectManagerId=82&ProjectDisabled=false'
 */
-router.put('/:id', (req, res, next) => {
+router.put('/projects.json/:id', (req, res, next) => {
     Projects.update(req.body, { where: { ProjectId: req.params.id } })
     .then((err, proj) => {
         if (err) {
@@ -93,7 +94,7 @@ router.put('/:id', (req, res, next) => {
  *  test in bash with
  *  curl -XDELETE http://localhost:3000/projects/{SOME_UNIQUE_ID}
 */
-router.delete('/:id', (req, res, next) => {
+router.delete('/projects.json/:id', (req, res, next) => {
     Projects.destroy({
         where: {
             ProjectId: req.params.id,
