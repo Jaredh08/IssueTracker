@@ -7,7 +7,7 @@ const bcrypt = require('bcrypt');
 module.exports = router;
 
 /* import database models */
-const Users = require('../models/users');
+const Users = require('../services/users');
 
 // router.get('/', passport.authenticate('jwt', { session: false, }),
 //   function(req, res, next) {
