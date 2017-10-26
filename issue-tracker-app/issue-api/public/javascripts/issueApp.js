@@ -18,14 +18,6 @@ app.config(function($routeProvider) {
         templateUrl: '/login.html',
         controller: 'authController'
     })
-    .when('/users', {
-        templateurl: 'users.html',
-        controller: 'userController'
-    })
-    .when('/users/:id', {
-      templateUrl: 'userEditor.html',
-      controller: 'updateUser'
-    })
     //add other angular routes here
 });
 
@@ -71,67 +63,4 @@ app.controller('authController', function($scope, $http, $location, $rootScope, 
       }
     });
   };
-});
-
-app.controller('dateController', dateController);
-function dateController ($scope) {
-  $scope.StartDate = new Date();
-}
-
-// User Factory Service
-app.factory('UserService', ['$resource', ($resource) => {
-    return $resource('/users/users.json/:id', null, {
-        'update': {method: 'PUT'}
-    });
-}]);
-
-// Helper Functions Service
-app.factory('HelperFunctions', function ($location) {
-    return {
-        changeView: function(view) {
-            $location.path(view);
-        },
-        refresh: function() {
-            $scope.users = UserService.query();
-            $scope.user = "";
-        }
-    };
-});
-
-// Projects listing Controller
-app.controller('UserController', function($scope, UserService, $http, HelperFunctions) {
-    $scope.users = UserService.query();
-    $scope.helpers = HelperFunctions;
-
-    // create a new project
-    $scope.createUser =  () => {
-        $http.post('/users/', $scope.user)
-        .then(() => {
-            $scope.users = UserService.query();
-            $scope.user = "";
-        });
-    };
-
-    // delete a project
-    $scope.deleteUser = (user_id) => {
-        console.log("TEST ", user_id);
-        $http.delete('/users/users.json/' + user_id)
-        .then(() => {
-            $scope.users = UserService.query();
-        });
-    }
-});
-
-app.controller('UpdateUser', function($scope, ProjectService, $http, $routeParams, HelperFunctions) {
-    $scope.user = UserService.get({id: $routeParams.id});
-
-    // update the project
-    $scope.updateUser = function() {
-        $http.put('/user/users.json/' + $routeParams.id, $scope.user)
-        .then(() => {
-            $scope.users = UserService.query();
-            HelperFunctions.changeView('/')
-        });
-    }
-
 });
