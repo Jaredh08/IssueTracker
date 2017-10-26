@@ -21,6 +21,10 @@ app.factory('HelperFunctions', function ($location) {
     };
 });
 
+//turn off hashbang mode
+app.config(['$locationProvider', function($locationProvider) {
+     $locationProvider.html5Mode(true);
+}]);
 
 // Projects listing Controller
 app.controller('ProjectController', ['$scope', 'ProjectService', '$http', 'HelperFunctions', ($scope, ProjectService, $http, HelperFunctions) => {
