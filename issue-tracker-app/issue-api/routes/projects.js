@@ -41,7 +41,7 @@ router.post('/', (req, res, next) => {
           res.send(err);
         }
         else {
-          console.log('New Project ${newProj.ProjectName}, with id ${newProj.id} has been created.');
+          console.log(`New Project ${newProj.ProjectName}, with id ${newProj.id} has been created.`);
           res.json(newProj);
         }
     });

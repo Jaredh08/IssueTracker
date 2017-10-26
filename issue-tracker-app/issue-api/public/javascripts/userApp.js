@@ -18,10 +18,10 @@ var app = angular.module('app', ['ngRoute', 'ngResource'])
           templateUrl: '/users.html',
           controller: 'userController'
       })
-      .when('/:id', {
-        templateUrl: '/users/:id.html',
-        controller: 'updateUser'
-      })
+      //.when('/:id', {
+      //  templateUrl: '/updateUser.html',
+      //  controller: 'updateUser'
+      //})
   });
 
   //turn off hashbang mode
