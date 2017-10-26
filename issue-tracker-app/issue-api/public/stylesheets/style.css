@@ -39,6 +39,16 @@ label.check {
   margin-right: 8px;
 }
 
+.datepicker md-content {
+  padding-bottom: 200px;
+}
+
+.datepicker .validation-messages {
+  font-size: 11px;
+  color: darkred;
+  margin: 10px 0 0 25px;
+}
+
 .grid {
   margin-left: auto;
   margin-right: auto;
