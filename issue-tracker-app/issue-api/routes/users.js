@@ -56,7 +56,7 @@ router.post('/', (req, res, next) => {
  *  test in bash with
  *  curl -XGET http://localhost:3000/users/{SOME_UNIQUE_ID}
  */
-router.get('/:id', (req, res, next) => {
+router.get('/users.json/:id', (req, res, next) => {
     Users.getUserById(req.params.id, (err, user) => {
         if (err) {
           console.log('There was an error during the query: ', err);
@@ -64,6 +64,8 @@ router.get('/:id', (req, res, next) => {
         }
         else {
             console.log(`User: ${user.UserName}`);
+            //do not send the password
+            user.UserPassword = '';
             res.json(user);
         }
     });

@@ -1,7 +1,26 @@
 const config = require('../config/database');
 const User = config.connect.import('../models/IssueTracker_Users');
 const eType = config.connect.import('../models/IssueTracker_EmployeeTypes');
+const uRoles = config.connect.import('../models/IssueTracker_UserRoles');
+const Projects = config.connect.import('../models/IssueTracker_Projects');
 const bcrypt = require('bcrypt');
+
+//declare associations
+User.hasMany(uRoles);
+User.hasOne(eType);
+User.hasMany(Projects);
+
+
+module.exports.getUserObj = function(id, callback) {
+  User.findById({
+    id,
+    include: [{ model: uRoles,
+                model: eType,
+                model: Projects}]
+
+  })
+  .then()
+}
 
 module.exports.getUserById = function(id, callback){
   User.findById(id)

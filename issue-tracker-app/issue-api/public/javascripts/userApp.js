@@ -1,14 +1,14 @@
-var app = angular.module('app', ['ngRoute', 'ngResource'])
-  .run(function($http, $rootScope){
-      $rootScope.authenticated = false;
-      $rootScope.current_user = 'Guest';
-
-      $rootScope.signout = function(){
-        $http.get('auth/signout');
-        $rootScope.authenticated = false;
-        $rootScope.current_user = 'Guest';
-      };
-  });
+var app = angular.module('app', ['ngRoute', 'ngResource']);
+  // .run(function($http, $rootScope){
+  //     $rootScope.authenticated = false;
+  //     $rootScope.current_user = 'Guest';
+  //
+  //     $rootScope.signout = function(){
+  //       $http.get('auth/signout');
+  //       $rootScope.authenticated = false;
+  //       $rootScope.current_user = 'Guest';
+  //     };
+  // });
 
   /* routes */
   app.config(function($routeProvider) {
@@ -18,16 +18,16 @@ var app = angular.module('app', ['ngRoute', 'ngResource'])
           templateUrl: '/users.html',
           controller: 'userController'
       })
-      //.when('/:id', {
-      //  templateUrl: '/updateUser.html',
-      //  controller: 'updateUser'
-      //})
+      .when('/:id', {
+          templateUrl: '/updateUser.html',
+          controller: 'updateUser'
+      })
   });
 
   //turn off hashbang mode
-  app.config(['$locationProvider', function($locationProvider) {
-       $locationProvider.html5Mode(true);
-  }]);
+  // app.config(['$locationProvider', function($locationProvider) {
+  //      $locationProvider.html5Mode(true);
+  // }]);
 
 
   app.controller('dateController', dateController);
@@ -56,7 +56,7 @@ var app = angular.module('app', ['ngRoute', 'ngResource'])
   });
 
   // Projects listing Controller
-  app.controller('UserController', function($scope, UserService, $http, HelperFunctions) {
+  app.controller('userController', function($scope, UserService, $http, HelperFunctions) {
       $scope.users = UserService.query();
       $scope.helpers = HelperFunctions;
 
@@ -69,7 +69,7 @@ var app = angular.module('app', ['ngRoute', 'ngResource'])
           });
       };
 
-      // delete a project
+      // delete a user
       $scope.deleteUser = (user_id) => {
           console.log("TEST ", user_id);
           $http.delete('/users/users.json/' + user_id)
@@ -79,10 +79,10 @@ var app = angular.module('app', ['ngRoute', 'ngResource'])
       }
   });
 
-  app.controller('updateUser', function($scope, ProjectService, $http, $routeParams, HelperFunctions) {
+  app.controller('updateUser', function($scope, UserService, $http, $routeParams, HelperFunctions) {
       $scope.user = UserService.get({id: $routeParams.id});
 
-      // update the project
+      // update the user
       $scope.updateUser = function() {
           $http.put('/user/users.json/' + $routeParams.id, $scope.user)
           .then(() => {
